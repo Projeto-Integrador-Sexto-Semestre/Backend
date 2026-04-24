@@ -1,19 +1,35 @@
 package smarthouse.com.main.controller
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.web.bind.annotation.*
 import smarthouse.com.main.model.User
 import smarthouse.com.main.repository.UserRepository
-import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/users")
-class UserController(val repository: UserRepository) {
+class UserController(
+    val repository: UserRepository,
+    val encoder: BCryptPasswordEncoder // Injetado via SecurityConfig
+) {
 
-    @GetMapping
-    fun list(): List<User> = repository.findAll()
+    @PostMapping("/register")
+    fun register(@RequestBody user: User): User {
+        user.password = encoder.encode(user.password)!!
+        return repository.save(user)
+    }
 
-    @PostMapping
-    fun create(@RequestBody user: User): User = repository.save(user)
+    @PostMapping("/login")
+    fun login(@RequestBody loginData: Map<String, String>): Any {
+        val email = loginData["email"] ?: ""
+        val password = loginData["password"] ?: ""
 
-    @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) = repository.deleteById(id)
+        val user = repository.findByEmail(email)
+            ?: return mapOf("message" to "Usuário não encontrado")
+
+        return if (encoder.matches(password, user.password)) {
+            user // Retorna o objeto usuário completo (ou uma mensagem de sucesso)
+        } else {
+            mapOf("message" to "Senha incorreta")
+        }
+    }
 }
