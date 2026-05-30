@@ -55,6 +55,8 @@ Registro de leituras históricas dos sensores.
 ## 5. User
 Gerenciamento de contas de usuário e autenticação.
 
+- **GET /users**: Lista todos os usuários cadastrados.
+- **GET /users/{id}**: Busca um usuário específico pelo seu ID.
 - **POST /users/register**: Registra um novo usuário com senha criptografada (BCrypt).
     - **Body**:
         - `email` (String, obrigatório, único)

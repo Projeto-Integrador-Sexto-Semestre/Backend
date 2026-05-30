@@ -9,8 +9,17 @@ import smarthouse.com.main.repository.UserRepository
 @RequestMapping("/users")
 class UserController(
     val repository: UserRepository,
-    val encoder: BCryptPasswordEncoder // Injetado via SecurityConfig
+    val encoder: BCryptPasswordEncoder
 ) {
+
+    // Lista todos os usuários
+    @GetMapping
+    fun listAll(): List<User> = repository.findAll()
+
+    // Busca usuário por ID
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): User =
+        repository.findById(id).orElseThrow { RuntimeException("Usuário não encontrado") }
 
     @PostMapping("/register")
     fun register(@RequestBody user: User): User {
@@ -27,7 +36,7 @@ class UserController(
             ?: return mapOf("message" to "Usuário não encontrado")
 
         return if (encoder.matches(password, user.password)) {
-            user // Retorna o objeto usuário completo (ou uma mensagem de sucesso)
+            user
         } else {
             mapOf("message" to "Senha incorreta")
         }
