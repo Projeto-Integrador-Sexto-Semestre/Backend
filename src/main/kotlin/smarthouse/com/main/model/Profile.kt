@@ -9,11 +9,11 @@ class Profile(
     val id: Long? = null,
 
     @Column(unique = true, nullable = false)
-    val name: String = "", // Ex: "ADMIN", "MORADOR", "VISITANTE"
+    val name: String = "",
 
     val description: String = "",
 
-    val canControlDevices: Boolean = false,
-    val canEditStructure: Boolean = false,
-    val canViewLogs: Boolean = true
+    val canControlDevices: Boolean? = false,
+    val canEditStructure: Boolean? = false,
+    val canViewLogs: Boolean? = true
 )
