@@ -16,7 +16,7 @@ class User(
 
     val name: String = "",
 
-    @ManyToOne // Muitos usuários podem ter o mesmo perfil
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
     var profile: Profile? = null
 )
