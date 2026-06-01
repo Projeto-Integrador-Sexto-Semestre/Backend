@@ -4,7 +4,6 @@ plugins {
 	id("org.springframework.boot") version "4.0.6"
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("plugin.jpa") version "2.2.21"
-	id("jacoco")
 }
 
 group = "smarthouse.com"
@@ -32,19 +31,14 @@ dependencies {
 	implementation("org.springframework.security:spring-security-messaging")
 	implementation("tools.jackson.module:jackson-module-kotlin")
 	runtimeOnly("org.postgresql:postgresql")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-	testImplementation("org.junit.jupiter:junit-jupiter")
-	testImplementation("org.mockito:mockito-core")
-	testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
 	testImplementation("org.springframework.integration:spring-integration-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testImplementation("org.jacoco:org.jacoco.core:0.8.10")
 	implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
-}
-
-jacoco {
-	toolVersion = "0.8.10"
 }
 
 kotlin {
@@ -59,24 +53,6 @@ allOpen {
 	annotation("jakarta.persistence.Embeddable")
 }
 
-// ...existing code...
-
 tasks.withType<Test> {
 	useJUnitPlatform()
-	finalizedBy(tasks.jacocoTestReport)
-}
-
-// Task para gerar relatório JaCoCo
-tasks.jacocoTestReport {
-	dependsOn(tasks.test)
-	reports {
-		xml.required = true
-		html.required = true
-		csv.required = true
-	}
-}
-
-// Task para validar cobertura
-tasks.named("test") {
-	finalizedBy("jacocoTestReport")
 }

@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 import smarthouse.com.main.model.Sensor
 
 @Repository
-interface SensorRepository : JpaRepository<Sensor, Long>
+interface SensorRepository : JpaRepository<Sensor, Long> {
+    fun findByMqttTopic(mqttTopic: String): Sensor?
+}
