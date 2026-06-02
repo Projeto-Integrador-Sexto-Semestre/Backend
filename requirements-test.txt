@@ -1,0 +1,9 @@
+JUnit5
+Mockito
+Mockito-Kotlin
+JaCoCo
+Kotlin-Test
+Spring-Boot-Test
+Spring-Test
+Hamcrest
+
