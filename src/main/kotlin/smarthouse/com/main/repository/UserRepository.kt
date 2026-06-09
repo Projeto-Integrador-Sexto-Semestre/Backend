@@ -1,10 +1,8 @@
 package smarthouse.com.main.repository
 
-import smarthouse.com.main.model.User
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
+import smarthouse.com.main.model.User
 
-@Repository
 interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?
 }
