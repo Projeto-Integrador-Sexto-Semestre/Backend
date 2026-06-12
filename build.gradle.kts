@@ -38,7 +38,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.integration:spring-integration-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("com.hivemq:hivemq-mqtt-client:1.3.3")    
+    implementation("com.hivemq:hivemq-mqtt-client:1.3.3")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 }
 
 kotlin {

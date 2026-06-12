@@ -8,12 +8,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-/**
- * Testes unitários para as Entidades (Models)
- *
- * Objetivo: Testar criação, inicialização e relacionamentos
- * entre as entidades JPA.
- */
 @DisplayName("Model Entities - Testes de Construção e Relacionamentos")
 class UserTest {
 
@@ -24,7 +18,7 @@ class UserTest {
         @Test
         @DisplayName("deveCriarUserComTodosOsCampos")
         fun deveCriarUserComTodosOsCampos() {
-            // Given & When
+
             val user = User(
                 id = 1L,
                 email = "test@example.com",
@@ -32,13 +26,13 @@ class UserTest {
                 name = "Test User"
             )
 
-            // Then
             assertNotNull(user)
             assertEquals(1L, user.id)
             assertEquals("test@example.com", user.email)
             assertEquals("encoded_password", user.password)
             assertEquals("Test User", user.name)
             assertNull(user.profile)
+
         }
 
         @Test

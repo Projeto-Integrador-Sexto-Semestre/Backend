@@ -29,6 +29,7 @@ class UserController(
     fun listAll(): List<User> = repository.findAll()
 
     @GetMapping("/{id}")
+
     fun findById(@PathVariable id: Long): User =
         repository.findById(id).orElseThrow { RuntimeException("Usuário não encontrado") }
 
@@ -62,7 +63,9 @@ class UserController(
     }
 
     @PostMapping("/login")
+
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Map<String, String>> {
+
         authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(request.email, request.password)
         )

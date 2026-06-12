@@ -13,6 +13,7 @@ import smarthouse.com.main.repository.SensorRepository
 class SensorController(
     val repository: SensorRepository,
     val deviceTypeRepository: DeviceTypeRepository,
+
     val roomRepository: RoomRepository
 ) {
     @GetMapping
@@ -22,9 +23,15 @@ class SensorController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody request: CreateSensorRequest): Sensor {
         val deviceType = deviceTypeRepository.findById(request.deviceTypeId)
+
+
             .orElseThrow { RuntimeException("DeviceType id=${request.deviceTypeId} não encontrado") }
+
+
         val room = roomRepository.findById(request.roomId)
             .orElseThrow { RuntimeException("Room id=${request.roomId} não encontrada") }
+
+
         return repository.save(Sensor(name = request.name, mqttTopic = request.mqttTopic, deviceType = deviceType, room = room))
     }
 

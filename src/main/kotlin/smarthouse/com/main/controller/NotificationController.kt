@@ -18,12 +18,16 @@ class NotificationController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+
     fun create(@RequestBody request: CreateNotificationRequest): Notification {
         val user = userRepository.findById(request.userId)
+
             .orElseThrow { RuntimeException("User id=${request.userId} não encontrado") }
+
         return repository.save(Notification(message = request.message, user = user))
     }
 
     @DeleteMapping("/{id}")
+
     fun delete(@PathVariable id: Long) = repository.deleteById(id)
 }

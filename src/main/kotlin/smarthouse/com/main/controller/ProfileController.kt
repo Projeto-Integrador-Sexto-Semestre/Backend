@@ -16,7 +16,10 @@ class ProfileController(val repository: ProfileRepository) {
 
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody profile: Profile): Profile {
+
         val existing = repository.findById(id).orElseThrow()
+
+        
         val updated = Profile(
             id = existing.id,
             name = profile.name,
@@ -25,6 +28,7 @@ class ProfileController(val repository: ProfileRepository) {
             canEditStructure = profile.canEditStructure,
             canViewLogs = profile.canViewLogs
         )
+
         return repository.save(updated)
     }
 

@@ -21,7 +21,6 @@ class AlertTest {
         @Test
         @DisplayName("deveCriarAlertComTodosOsCampos")
         fun deveCriarAlertComTodosOsCampos() {
-            // Given
             val now = LocalDateTime.now()
             val sensor = Sensor(id = 1L, name = "Sensor Temp")
             val alertType = AlertType(id = 1L, name = "CRITICAL")
