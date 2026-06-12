@@ -72,4 +72,10 @@ class UserController(
         val token = jwtService.generateToken(request.email)
         return ResponseEntity.ok(mapOf("token" to token))
     }
+
+    @DeleteMapping("/{id}")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        fun delete(@PathVariable id: Long) {
+        repository.deleteById(id)
+    }
 }
