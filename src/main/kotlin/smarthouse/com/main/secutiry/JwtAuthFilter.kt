@@ -48,4 +48,14 @@ class JwtAuthFilter(
 
         filterChain.doFilter(request, response)
     }
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val path = request.requestURI
+        return path.startsWith("/users/login") ||
+                path.startsWith("/users/register") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path == "/"
+    }
+
 }

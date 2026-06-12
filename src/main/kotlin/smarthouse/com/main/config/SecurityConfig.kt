@@ -36,11 +36,20 @@ class SecurityConfig(
             .cors { it.configurationSource(corsConfigurationSource()) }
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .authorizeHttpRequests {
-                it.requestMatchers("/users/login", "/users/register").permitAll()
-                it.anyRequest().authenticated()
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers(
+                    "/",
+                    "/swagger-ui.html",      // Página principal
+                    "/swagger-ui/**",       // Recursos (CSS/JS)
+                    "/v3/api-docs/**",      // Definição da API
+                    "/webjars/**",          // Recursos estáticos do Swagger
+                    "/users/login",
+                    "/users/register"
+                ).permitAll()
+                auth.anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+
         return http.build()
     }
 
