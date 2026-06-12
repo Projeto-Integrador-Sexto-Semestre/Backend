@@ -110,6 +110,35 @@ jwt.expiration=86400000
 
 Para uso real ou público, evite manter credenciais no arquivo versionado. Prefira variáveis de ambiente ou perfis locais do Spring.
 
+## Variáveis de Ambiente Necessárias
+
+| Variável | Descrição | Tipo | Obrigatória |
+|---|---|---|---|
+| `SPRING_DATASOURCE_URL` | URL do banco de dados PostgreSQL | String | ✅ Sim |
+| `SPRING_DATASOURCE_USERNAME` | Usuário do banco de dados | String | ✅ Sim |
+| `SPRING_DATASOURCE_PASSWORD` | Senha do banco de dados | String | ✅ Sim |
+| `JWT_SECRET` | Chave secreta para assinar JWT (mín. 32 caracteres) | String | ✅ Sim |
+| `JWT_EXPIRATION` | Tempo de expiração do token em ms | Inteiro | ⭕ Não (padrão: 86400000) |
+| `MQTT_BROKER` | Endereço do broker MQTT | String | ✅ Sim |
+| `MQTT_PORT` | Porta do broker MQTT | Inteiro | ⭕ Não (padrão: 1883) |
+| `MQTT_USER` | Usuário MQTT (se necessário) | String | ⭕ Não |
+| `MQTT_PASSWORD` | Senha MQTT | String | ✅ Sim |
+
+## Exemplos de Usuários/Senhas para Teste
+
+**Usuários Padrão (para testes):**
+
+| Email | Senha | Propósito |
+|---|---|---|
+| `usuario@teste.com` | `Teste@123` | Teste básico |
+| `admin@teste.com` | `Admin@123` | Teste com privilégios |
+
+**Nota:** Registre novos usuários via endpoint `/users/register`. Os exemplos acima servem apenas para testes; use valores seguros em produção.
+
+**Padrão de Senha Recomendado:**
+- Mínimo 8 caracteres
+- Incluir maiúsculas, minúsculas, números e caracteres especiais
+
 ## Autenticação
 
 ### Registrar usuário
