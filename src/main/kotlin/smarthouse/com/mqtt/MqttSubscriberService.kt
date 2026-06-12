@@ -65,7 +65,8 @@ class MqttSubscriberService(
 
             client.subscribeWith().topicFilter("casa/sensor/temperatura").send()
             client.subscribeWith().topicFilter("casa/sensor/luz").send()
-            client.subscribeWith().topicFilter("casa/sensor/presenca").send()
+            client.subscribeWith().topicFilter("casa/sensor/presenca/sala").send()
+            client.subscribeWith().topicFilter("casa/sensor/presenca/cozinha").send()
             println("✅ Subscriptions registradas!")
 
         } catch (e: Exception) {
