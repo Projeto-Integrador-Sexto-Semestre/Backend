@@ -6,25 +6,25 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "alerts")
 class Alert(
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	val id: Long? = null,
 
-	val message: String = "",
+    var message: String = "",
 
-	val timestamp: LocalDateTime = LocalDateTime.now(),
+    val timestamp: LocalDateTime = LocalDateTime.now(),
 
-	var acknowledged: Boolean = false,
+    var acknowledged: Boolean = false,
 
-	@ManyToOne
+    @ManyToOne
 	@JoinColumn(name = "alert_type_id")
 	var alertType: AlertType? = null,
 
 	// ligação opcional a sensor ou dispositivo
-	@ManyToOne
+    @ManyToOne
 	@JoinColumn(name = "sensor_id")
 	var sensor: Sensor? = null,
 
-	@ManyToOne
+    @ManyToOne
 	@JoinColumn(name = "device_id")
 	var device: IotDevice? = null
 )

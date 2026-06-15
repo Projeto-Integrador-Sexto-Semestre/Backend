@@ -9,12 +9,12 @@ class User(
     val id: Long? = null,
 
     @Column(unique = true, nullable = false)
-    val email: String = "",
+    var email: String = "",
 
     @Column(nullable = false)
     var password: String = "",
 
-    val name: String = "",
+    var name: String = "",
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")

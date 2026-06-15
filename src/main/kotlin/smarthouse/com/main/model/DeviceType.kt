@@ -9,7 +9,7 @@ class DeviceType(
     val id: Long? = null,
 
     @Column(unique = true, nullable = false)
-    val name: String = "", // Ex: "Lâmpada RGB", "Sensor de Umidade", "Ar Condicionado"
+    var name: String = "", // Ex: "Lâmpada RGB", "Sensor de Umidade", "Ar Condicionado"
 
     val manufacturer: String = "", // Ex: "Xiaomi", "Sonoff"
 

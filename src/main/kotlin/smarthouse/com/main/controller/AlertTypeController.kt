@@ -14,7 +14,13 @@ class AlertTypeController(val repository: AlertTypeRepository) {
     @PostMapping
     fun create(@RequestBody type: AlertType) = repository.save(type)
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody type: AlertType): AlertType {
+        val existing = repository.findById(id).orElseThrow { RuntimeException("AlertType id=$id não encontrado") }
+        existing.name = type.name // Assumindo propriedade name
+        return repository.save(existing)
+    }
+
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = repository.deleteById(id)
 }
-

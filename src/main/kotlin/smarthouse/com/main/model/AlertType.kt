@@ -9,7 +9,7 @@ class AlertType(
     val id: Long? = null,
 
     @Column(unique = true, nullable = false)
-    val name: String = "",
+    var name: String = "",
 
     val description: String? = null
 )

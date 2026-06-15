@@ -11,22 +11,28 @@ import smarthouse.com.main.repository.SensorRepository
 @RequestMapping("/sensor-history")
 class SensorHistoryController(
     val repository: SensorHistoryRepository,
-
     val sensorRepository: SensorRepository
 ) {
     @GetMapping("/sensor/{sensorId}")
     fun getHistory(@PathVariable sensorId: Long) =
-
         repository.findBySensorIdOrderByTimestampDesc(sensorId)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody request: CreateSensorHistoryRequest): SensorHistory {
-
         val sensor = sensorRepository.findById(request.sensorId)
+            .orElseThrow { RuntimeException("Sensor id=${request.sensorId} não encontrado") }
+        return repository.save(SensorHistory(value = request.value, sensor = sensor))
+    }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: CreateSensorHistoryRequest): SensorHistory {
+        val history = repository.findById(id).orElseThrow { RuntimeException("SensorHistory id=$id não encontrado") }
+        val sensor = sensorRepository.findById(request.sensorId)
             .orElseThrow { RuntimeException("Sensor id=${request.sensorId} não encontrado") }
 
-        return repository.save(SensorHistory(value = request.value, sensor = sensor))
+        history.value = request.value
+        history.sensor = sensor
+        return repository.save(history)
     }
 }

@@ -23,22 +23,25 @@ class HouseController(
         val user = userRepository.findById(request.userId)
             .orElseThrow { RuntimeException("User id=${request.userId} não encontrado") }
 
-        val house = House(
-            name    = request.name,
-            address = request.address,
-            user    = user
-        )
+        val house = House(name = request.name, address = request.address, user = user)
+        return repository.save(house)
+    }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: CreateHouseRequest): House {
+        val house = repository.findById(id).orElseThrow { RuntimeException("House id=$id não encontrada") }
+        val user = userRepository.findById(request.userId)
+            .orElseThrow { RuntimeException("User id=${request.userId} não encontrado") }
+
+        house.name = request.name
+        house.address = request.address
+        house.user = user
         return repository.save(house)
     }
 
     @GetMapping("/user/{userId}")
-    fun listByUser(@PathVariable userId: Long): List<House> {
-        return repository.findByUserId(userId)
-    }
+    fun listByUser(@PathVariable userId: Long): List<House> = repository.findByUserId(userId)
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) {
-        repository.deleteById(id)
-    }
+    fun delete(@PathVariable id: Long) = repository.deleteById(id)
 }

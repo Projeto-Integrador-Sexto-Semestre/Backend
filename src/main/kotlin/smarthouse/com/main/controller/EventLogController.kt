@@ -24,6 +24,18 @@ class EventLogController(
         return repository.save(EventLog(eventType = request.eventType, message = request.message, user = user))
     }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: CreateEventLogRequest): EventLog {
+        val log = repository.findById(id).orElseThrow { RuntimeException("EventLog id=$id não encontrado") }
+        val user = userRepository.findById(request.userId)
+            .orElseThrow { RuntimeException("User id=${request.userId} não encontrado") }
+
+        log.eventType = request.eventType
+        log.message = request.message
+        log.user = user
+        return repository.save(log)
+    }
+
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = repository.deleteById(id)
 }

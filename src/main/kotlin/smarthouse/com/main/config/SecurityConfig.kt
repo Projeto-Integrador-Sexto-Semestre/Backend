@@ -1,5 +1,9 @@
 package smarthouse.com.main.config
 
+import io.swagger.v3.oas.models.Components
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.security.SecurityRequirement
+import io.swagger.v3.oas.models.security.SecurityScheme
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -31,18 +35,26 @@ class SecurityConfig(
     }
 
     @Bean
+    fun customOpenAPI(): OpenAPI {
+        return OpenAPI()
+            .components(Components().addSecuritySchemes("bearer-key",
+                SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
+            .addSecurityItem(SecurityRequirement().addList("bearer-key"))
+    }
+
+    @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .csrf { it.disable() } // Essencial para permitir requisições POST do seu cliente
             .cors { it.configurationSource(corsConfigurationSource()) }
-            .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers(
                     "/",
-                    "/swagger-ui.html",      // Página principal
-                    "/swagger-ui/**",       // Recursos (CSS/JS)
-                    "/v3/api-docs/**",      // Definição da API
-                    "/webjars/**",          // Recursos estáticos do Swagger
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/webjars/**",
                     "/users/login",
                     "/users/register"
                 ).permitAll()

@@ -19,7 +19,6 @@ class ProfileController(val repository: ProfileRepository) {
 
         val existing = repository.findById(id).orElseThrow()
 
-        
         val updated = Profile(
             id = existing.id,
             name = profile.name,

@@ -8,7 +8,7 @@ class Action(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val name: String = "",
+    var name: String = "",
 
     // Dispositivo alvo da ação
     @ManyToOne
@@ -16,6 +16,6 @@ class Action(
     var device: IotDevice? = null,
 
     // Comando a ser enviado (ex: "ON", "OFF", "SET:25")
-    val command: String = ""
+    var command: String = ""
 )
 
