@@ -9,9 +9,9 @@ class House(
     val id: Long? = null,
 
     @Column(nullable = false)
-    val name: String = "",
+    var name: String = "",
 
-    val address: String = "",
+    var address: String = "",
 
     // Relacionamento: Uma casa pertence a um Usuário
     @ManyToOne

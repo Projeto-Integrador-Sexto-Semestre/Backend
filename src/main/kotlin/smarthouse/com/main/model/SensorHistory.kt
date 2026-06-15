@@ -10,7 +10,7 @@ class SensorHistory(
     val id: Long? = null,
 
     @Column(nullable = false)
-    val value: String = "", // O valor lido (ex: "25.5")
+    var value: String = "", // O valor lido (ex: "25.5")
 
     val timestamp: LocalDateTime = LocalDateTime.now(),
 

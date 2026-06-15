@@ -28,6 +28,22 @@ class IotDeviceController(
         return repository.save(IotDevice(name = request.name, deviceType = deviceType, topic = request.topic, status = request.status, room = room))
     }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: CreateIotDeviceRequest): IotDevice {
+        val device = repository.findById(id).orElseThrow { RuntimeException("Device id=$id não encontrado") }
+        val deviceType = deviceTypeRepository.findById(request.deviceTypeId)
+            .orElseThrow { RuntimeException("DeviceType id=${request.deviceTypeId} não encontrado") }
+        val room = roomRepository.findById(request.roomId)
+            .orElseThrow { RuntimeException("Room id=${request.roomId} não encontrada") }
+
+        device.name = request.name
+        device.deviceType = deviceType
+        device.topic = request.topic
+        device.status = request.status
+        device.room = room
+        return repository.save(device)
+    }
+
     @GetMapping("/room/{roomId}")
     fun listByRoom(@PathVariable roomId: Long) = repository.findByRoomId(roomId)
 

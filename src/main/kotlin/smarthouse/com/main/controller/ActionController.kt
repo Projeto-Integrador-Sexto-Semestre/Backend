@@ -24,6 +24,19 @@ class ActionController(
         return repository.save(Action(name = request.name, device = device, command = request.command))
     }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: CreateActionRequest): Action {
+        val device = deviceRepository.findById(request.deviceId)
+            .orElseThrow { RuntimeException("Device id=${request.deviceId} não encontrado") }
+        val action = repository.findById(id)
+            .orElseThrow { RuntimeException("Action id=$id não encontrada") }
+
+        action.name = request.name
+        action.command = request.command
+        action.device = device
+        return repository.save(action)
+    }
+
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = repository.deleteById(id)
 }

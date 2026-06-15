@@ -11,7 +11,6 @@ import smarthouse.com.main.repository.AutomationRuleRepository
 @RequestMapping("/automation-rules")
 class AutomationRuleController(
     val repository: AutomationRuleRepository,
-    
     val actionRepository: ActionRepository
 ) {
     @GetMapping
@@ -19,13 +18,23 @@ class AutomationRuleController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-
-
     fun create(@RequestBody request: CreateAutomationRuleRequest): AutomationRule {
         val action = actionRepository.findById(request.actionId)
-
             .orElseThrow { RuntimeException("Action id=${request.actionId} não encontrada") }
         return repository.save(AutomationRule(name = request.name, condition = request.condition, enabled = request.enabled, action = action))
+    }
+
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: CreateAutomationRuleRequest): AutomationRule {
+        val rule = repository.findById(id).orElseThrow { RuntimeException("AutomationRule id=$id não encontrada") }
+        val action = actionRepository.findById(request.actionId)
+            .orElseThrow { RuntimeException("Action id=${request.actionId} não encontrada") }
+
+        rule.name = request.name
+        rule.condition = request.condition
+        rule.enabled = request.enabled
+        rule.action = action
+        return repository.save(rule)
     }
 
     @DeleteMapping("/{id}")

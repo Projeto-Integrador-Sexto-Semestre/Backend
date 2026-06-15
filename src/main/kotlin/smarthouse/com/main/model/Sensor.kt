@@ -9,9 +9,9 @@ class Sensor(
     val id: Long? = null,
 
     @Column(nullable = false)
-    val name: String = "", // Ex: "Sensor de Temperatura Sala"
+    var name: String = "", // Ex: "Sensor de Temperatura Sala"
 
-    val mqttTopic: String = "", // Ex: "casa/sala/temp"
+    var mqttTopic: String = "", // Ex: "casa/sala/temp"
 
     @ManyToOne
     @JoinColumn(name = "device_type_id")

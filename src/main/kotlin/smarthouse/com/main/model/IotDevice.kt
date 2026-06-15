@@ -9,13 +9,13 @@ class IotDevice(
     val id: Long? = null,
 
     @Column(nullable = false)
-    val name: String = "",
+    var name: String = "",
 
     @ManyToOne
     @JoinColumn(name = "device_type_id", nullable = false)
     var deviceType: DeviceType? = null, // Agora é uma relação!
 
-    val topic: String = "",
+    var topic: String = "",
     var status: String = "OFF",
 
     @ManyToOne

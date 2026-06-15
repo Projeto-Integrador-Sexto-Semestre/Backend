@@ -9,9 +9,9 @@ class Room(
     val id: Long? = null,
 
     @Column(nullable = false)
-    val name: String = "", // Ex: "Quarto Principal"
+    var name: String = "", // Ex: "Quarto Principal"
 
-    val type: String = "", // Ex: "QUARTO", "COZINHA", "GARAGEM"
+    var type: String = "", // Ex: "QUARTO", "COZINHA", "GARAGEM"
 
     // Relacionamento: Um cómodo pertence a uma Casa
     @ManyToOne

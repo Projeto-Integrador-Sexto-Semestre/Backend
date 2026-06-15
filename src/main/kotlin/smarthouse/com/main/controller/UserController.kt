@@ -29,7 +29,6 @@ class UserController(
     fun listAll(): List<User> = repository.findAll()
 
     @GetMapping("/{id}")
-
     fun findById(@PathVariable id: Long): User =
         repository.findById(id).orElseThrow { RuntimeException("Usuário não encontrado") }
 
@@ -62,20 +61,37 @@ class UserController(
         )
     }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: RegisterUserRequest): User {
+        val user = repository.findById(id).orElseThrow { RuntimeException("User id=$id não encontrado") }
+        val profile = profileRepository.findById(request.profileId)
+            .orElseThrow { RuntimeException("Profile id=${request.profileId} não encontrado") }
+
+        user.name = request.name
+        user.email = request.email
+        user.password = encoder.encode(request.password)!!
+        user.profile = profile
+        return repository.save(user)
+    }
+
     @PostMapping("/login")
-
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<Map<String, String>> {
-
-        authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(request.email, request.password)
-        )
-        val token = jwtService.generateToken(request.email)
-        return ResponseEntity.ok(mapOf("token" to token))
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<Any> {
+        return try {
+            authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(request.email, request.password)
+            )
+            val token = jwtService.generateToken(request.email)
+            ResponseEntity.ok(mapOf("token" to token))
+        } catch (e: Exception) {
+            // Retorna um status 401 Unauthorized com uma mensagem clara
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(mapOf("error" to "Credenciais inválidas ou usuário não encontrado"))
+        }
     }
 
     @DeleteMapping("/{id}")
-        @ResponseStatus(HttpStatus.NO_CONTENT)
-        fun delete(@PathVariable id: Long) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun delete(@PathVariable id: Long) {
         repository.deleteById(id)
     }
 }

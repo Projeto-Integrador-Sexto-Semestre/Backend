@@ -9,9 +9,9 @@ class EventLog(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val eventType: String = "",
+    var eventType: String = "",
 
-    val message: String = "",
+    var message: String = "",
 
     val timestamp: LocalDateTime = LocalDateTime.now(),
 

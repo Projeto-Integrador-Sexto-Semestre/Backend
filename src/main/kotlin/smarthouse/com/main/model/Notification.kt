@@ -9,7 +9,7 @@ class Notification(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val message: String = "",
+    var message: String = "",
 
     val timestamp: LocalDateTime = LocalDateTime.now(),
 

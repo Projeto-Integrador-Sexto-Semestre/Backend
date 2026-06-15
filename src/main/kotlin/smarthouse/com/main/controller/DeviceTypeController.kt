@@ -14,6 +14,13 @@ class DeviceTypeController(val repository: DeviceTypeRepository) {
     @PostMapping
     fun create(@RequestBody type: DeviceType) = repository.save(type)
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody type: DeviceType): DeviceType {
+        val existing = repository.findById(id).orElseThrow { RuntimeException("DeviceType id=$id não encontrado") }
+        existing.name = type.name
+        return repository.save(existing)
+    }
+
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = repository.deleteById(id)
 }

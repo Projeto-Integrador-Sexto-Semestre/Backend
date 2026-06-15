@@ -8,10 +8,10 @@ class AutomationRule(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val name: String = "",
+    var name: String = "",
 
     // Expressão ou condição (simples string). Ex: "temperature > 30"
-    val condition: String = "",
+    var condition: String = "",
 
     var enabled: Boolean = true,
 
