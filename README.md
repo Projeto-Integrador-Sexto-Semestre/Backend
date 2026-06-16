@@ -24,7 +24,7 @@ Este serviço é a camada principal de negócio e persistência da solução. El
 - PostgreSQL
 - HiveMQ MQTT Client
 - Gradle Kotlin DSL
-- JUnit 5
+- JUnit 5 + Mockito
 
 ## Estrutura
 
@@ -37,11 +37,12 @@ Este serviço é a camada principal de negócio e persistência da solução. El
 |   |   |-- kotlin/smarthouse/com
 |   |   |   |-- main
 |   |   |   |   |-- config
+|   |   |   |   |   |-- SecurityConfig.kt (CORS, JWT, Swagger)
 |   |   |   |   |-- controller
 |   |   |   |   |-- dto
 |   |   |   |   |-- model
 |   |   |   |   |-- repository
-|   |   |   |   `-- secutiry
+|   |   |   |   `-- secutiry (contém JwtService, JwtAuthFilter)
 |   |   |   `-- mqtt
 |   |   `-- resources/application.properties
 |   `-- test/kotlin/smarthouse/com/main
@@ -50,10 +51,8 @@ Este serviço é a camada principal de negócio e persistência da solução. El
 |       |-- model
 |       |-- repository
 |       `-- service
-`-- RELATORIO_TESTES.md
 ```
 
-> Observação: o pacote `secutiry` parece conter um erro de grafia, mas foi mantido assim no código.
 
 ## Como Rodar
 
@@ -87,6 +86,20 @@ Endpoint raiz:
 GET /
 ```
 
+## Documentação da API (Swagger/OpenAPI)
+
+A documentação interativa da API está disponível em:
+
+```text
+http://localhost:8080/swagger-ui.html
+```
+
+Também é possível acessar o arquivo OpenAPI JSON:
+
+```text
+http://localhost:8080/v3/api-docs
+```
+
 ## Configuração
 
 As configurações ficam em `src/main/resources/application.properties`.
@@ -97,12 +110,16 @@ Principais propriedades:
 spring.application.name=smart-home-api
 server.port=8080
 
-spring.datasource.url=jdbc:postgresql://...
-spring.datasource.username=...
-spring.datasource.password=...
+spring.datasource.url=jdbc:postgresql://seu-host/seu-banco?sslmode=require
+spring.datasource.username=seu-usuario
+spring.datasource.password=sua-senha
+spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+springdoc.swagger-ui.path=/swagger-ui.html
 
 jwt.secret=sua-chave-secreta-com-pelo-menos-32-caracteres
 jwt.expiration=86400000
@@ -172,6 +189,25 @@ Content-Type: application/json
 ```
 
 O login gera um token JWT quando as credenciais são válidas.
+
+### Usar Token JWT em Requisições
+
+Após fazer login, inclua o token no header `Authorization` com o prefixo `Bearer`:
+
+```http
+GET /users
+Authorization: Bearer seu-token-jwt-aqui
+```
+
+Exemplo com cURL:
+
+```bash
+curl -H "Authorization: Bearer eyJhbGc..." http://localhost:8080/users
+```
+
+### Todos os outros endpoints
+
+Requerem autenticação via JWT. O token deve ser incluído no header `Authorization` com o formato `Bearer <token>`.
 
 ## Principais Entidades
 
@@ -294,8 +330,23 @@ No Windows:
 ```bash
 gradlew.bat test
 ```
+### Cobertura de Testes
 
-O projeto inclui testes para controllers REST, configuração de segurança, repositories, modelos, serviços de telemetria/MQTT e inicialização da aplicação.
+O projeto possui **135 testes unitários** com 100% de sucesso:
+
+- **Testes Totais:** 135
+- **Taxa de Sucesso:** 100%
+- **Cobertura:** 67% de instruções, 91% de branches
+- **Tempo de Execução:** ~7 segundos
+
+Os testes cobrem:
+- Controllers REST (UserController, HouseController, RoomController, SensorController, NotificationController, etc.)
+- Configuração de segurança e JWT
+- Repositories
+- Modelos e entidades
+- Serviços MQTT
+- Inicialização da aplicação
+
 
 ## Docker
 
@@ -319,7 +370,9 @@ Mobile   -> consome ou simula a mesma API em uma experiência Android
 
 ## Cuidados de Segurança
 
-- Externalize credenciais de banco e chaves JWT.
-- Revise a configuração de segurança antes de produção. O arquivo atual exclui a auto-configuração servlet padrão de segurança.
-- Defina uma política de CORS caso o frontend rode em outro domínio.
-- Evite retornar entidades com campos sensíveis, especialmente senhas.
+- **Credenciais:** Externalize credenciais de banco e chaves JWT via variáveis de ambiente.
+- **JWT:** Mantenha `jwt.secret` com pelo menos 32 caracteres e mude antes de ir para produção.
+- **CORS:** A configuração atual permite requisições de qualquer origem (`*`). Em produção, restrinja aos domínios específicos do seu frontend.
+- **Autenticação:** Os endpoints `/users/login` e `/users/register` são públicos. Todos os outros requerem token JWT válido.
+- **Swagger:** Em produção, considere desabilitar Swagger UI por motivos de segurança, expondo apenas endpoints essenciais.
+- **Entidades:** Evite retornar senhas ou dados sensíveis nas respostas REST. Use DTOs (Data Transfer Objects) apropriados.
